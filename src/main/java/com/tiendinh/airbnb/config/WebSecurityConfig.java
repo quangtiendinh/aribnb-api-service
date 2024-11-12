@@ -34,6 +34,7 @@ public class WebSecurityConfig {
             "/actuator/health",
             "favicon.ico",
             "/",
+            "api/v1/listings/*",
     };
 
     @Bean

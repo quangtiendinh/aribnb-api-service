@@ -35,6 +35,14 @@ CREATE TABLE IF NOT EXISTS public.property_types (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+CREATE TABLE IF NOT EXISTS public.categories (
+    id BIGSERIAL PRIMARY KEY,
+    name VARCHAR(100) NOT NULL UNIQUE,
+    description TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
 -- 4. Listings Table
 CREATE TABLE IF NOT EXISTS public.listings (
     id BIGSERIAL PRIMARY KEY,
@@ -56,6 +64,17 @@ CREATE TABLE IF NOT EXISTS public.listings (
     FOREIGN KEY (location_id) REFERENCES locations(id) ON DELETE SET NULL,
     FOREIGN KEY (property_type_id) REFERENCES property_types(id) ON DELETE SET NULL
 );
+
+CREATE TABLE IF NOT EXISTS public.listings_categories (
+     listing_id BIGINT,
+     category_id BIGINT,
+     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+     PRIMARY KEY (listing_id, category_id),
+     FOREIGN KEY (listing_id) REFERENCES listings(id) ON DELETE CASCADE,
+     FOREIGN KEY (category_id) REFERENCES categories(id) ON DELETE CASCADE
+);
+
 
 -- 5. Photos Table
 CREATE TABLE IF NOT EXISTS public.photos (
