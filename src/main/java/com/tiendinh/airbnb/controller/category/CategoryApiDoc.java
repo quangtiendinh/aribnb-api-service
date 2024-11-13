@@ -43,7 +43,7 @@ public interface CategoryApiDoc {
         return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping(ApiPath.BY_ID)
     default ResponseEntity<CategoryDTO> getCategoryById(@PathVariable Long id) {
         return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
     }
@@ -52,12 +52,12 @@ public interface CategoryApiDoc {
     default ResponseEntity<CategoryDTO> createCategory(@Valid @RequestBody CategoryAddRequest request) {
         return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
     }
-    @PutMapping("/{id}")
+    @PutMapping(ApiPath.BY_ID)
     default ResponseEntity<CategoryDTO> updateCategory(@PathVariable Long id, @Valid @RequestBody CategoryUpdateRequest request) {
         return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping(ApiPath.BY_ID)
     default ResponseEntity<Void> deleteCategory(@PathVariable Long id) {
         return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
     }
