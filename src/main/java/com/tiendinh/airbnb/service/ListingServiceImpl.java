@@ -3,6 +3,7 @@ package com.tiendinh.airbnb.service;
 import com.tiendinh.airbnb.controller.listing.request.ListingAddRequest;
 import com.tiendinh.airbnb.controller.listing.request.ListingUpdateRequest;
 import com.tiendinh.airbnb.controller.listing.request.ListingViewRequest;
+import com.tiendinh.airbnb.exception.BusinessLogicException;
 import com.tiendinh.airbnb.mapper.ListingMapper;
 import com.tiendinh.airbnb.mapper.ListingViewDetailMapper;
 import com.tiendinh.airbnb.mapper.ListingViewMapper;
@@ -105,7 +106,7 @@ public class ListingServiceImpl implements ListingService {
             }
             return listingMapper.toDTO(listingRepository.save(listing));
         } else {
-            throw new IllegalArgumentException("Invalid input data for creating listing");
+            throw BusinessLogicException.resourceNotFound("The listing is not found.");
         }
     }
 
@@ -150,14 +151,14 @@ public class ListingServiceImpl implements ListingService {
             }
             return listingMapper.toDTO(listingRepository.save(listing));
         } else {
-            throw new IllegalArgumentException("Listing not found");
+            throw BusinessLogicException.resourceNotFound("The listing is not found.");
         }
     }
 
     @Override
     @Transactional
     public void deleteListing(Long listingId) {
-        var listing = listingRepository.findById(listingId).orElseThrow(() -> new RuntimeException("Not found"));
+        var listing = listingRepository.findById(listingId).orElseThrow(() -> BusinessLogicException.resourceNotFound("Not found"));
         listingRepository.delete(listing);
     }
 }
