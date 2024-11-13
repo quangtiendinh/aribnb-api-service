@@ -3,6 +3,8 @@ package com.tiendinh.airbnb.service;
 import com.tiendinh.airbnb.controller.reservation.request.ReservationAddRequest;
 import com.tiendinh.airbnb.controller.reservation.request.ReservationRequest;
 import com.tiendinh.airbnb.controller.reservation.request.ReservationUpdateRequest;
+import com.tiendinh.airbnb.exception.BusinessLogicException;
+import com.tiendinh.airbnb.exception.ReservationException;
 import com.tiendinh.airbnb.mapper.ReservationMapper;
 import com.tiendinh.airbnb.model.constant.Constant;
 import com.tiendinh.airbnb.model.dto.ReservationDTO;
@@ -54,10 +56,10 @@ public class ReservationServiceImpl implements ReservationService {
     @Transactional
     public ReservationDTO createReservation(ReservationAddRequest request) {
         var listing = listingRepository.findById(request.getListingId())
-                .orElseThrow(() -> new RuntimeException("Listing not found"));
+                .orElseThrow(() -> BusinessLogicException.resourceNotFound(String.format("The reservation with listing id %d is not found.", request.getListingId())));
 
         var guest = userRepository.findById(request.getGuestId())
-                .orElseThrow(() -> new RuntimeException("Guest not found"));
+                .orElseThrow(() -> BusinessLogicException.resourceNotFound(String.format("The Guest with id %d is not found.", request.getGuestId())));
 
         var overlapReservations = reservationRepository.findOverlappingReservations(request.getListingId(), request.getCheckIn(), request.getCheckOut());
         if (CollectionUtils.isEmpty(overlapReservations)) {
@@ -79,7 +81,7 @@ public class ReservationServiceImpl implements ReservationService {
 
             return reservationMapper.toDTO(reservationRepository.save(reservation));
         }
-        throw new RuntimeException("not validation");
+        throw ReservationException.reservationOverlapping();
 
     }
 
@@ -93,14 +95,14 @@ public class ReservationServiceImpl implements ReservationService {
     @Transactional
     public ReservationDTO updateReservation(Long id, ReservationUpdateRequest request) {
         Reservation reservation = reservationRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Reservation not found"));
+                .orElseThrow(() -> BusinessLogicException.resourceNotFound(String.format("The reservation with id %d is not found.", id)));
         var overlapReservations = reservationRepository.findOverlappingReservations(request.getListingId(), request.getCheckIn(), request.getCheckOut());
         if (CollectionUtils.isEmpty(overlapReservations)) {
             reservation.setCheckIn(request.getCheckIn());
             reservation.setCheckOut(request.getCheckOut());
             reservation.setStatus(ReservationStatus.PENDING);
         } else {
-            throw new RuntimeException("not validation");
+            throw ReservationException.reservationOverlapping();
         }
         return reservationMapper.toDTO(reservationRepository.save(reservation));
 
@@ -119,21 +121,21 @@ public class ReservationServiceImpl implements ReservationService {
     @Override
     public void deleteReservation(Long id) {
         if (!reservationRepository.existsById(id)) {
-            throw new RuntimeException("Reservation not found");
+            throw BusinessLogicException.resourceNotFound(String.format("The reservation with id %d is not found.", id));
         }
         reservationRepository.deleteById(id);
     }
 
     private ReservationDTO updateReservationStatus(Long id, ReservationStatus status) {
         Reservation reservation = reservationRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Reservation not found"));
+                .orElseThrow(() -> BusinessLogicException.resourceNotFound(String.format("The reservation with id %d is not found.", id)));
 
         if (reservation.getStatus() == ReservationStatus.CONFIRMED) {
-            throw new RuntimeException("Reservation is already confirmed");
+            throw ReservationException.reservationConfirmed();
         }
 
         if (reservation.getStatus() == ReservationStatus.CANCELED) {
-            throw new RuntimeException("Canceled reservation cannot be confirmed");
+            throw ReservationException.reservationCanceled();
         }
         reservation.setStatus(status);
         reservation.setUpdatedAt(new Date());

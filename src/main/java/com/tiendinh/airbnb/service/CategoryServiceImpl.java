@@ -3,6 +3,7 @@ package com.tiendinh.airbnb.service;
 import com.tiendinh.airbnb.controller.category.request.CategoryAddRequest;
 import com.tiendinh.airbnb.controller.category.request.CategoryRequest;
 import com.tiendinh.airbnb.controller.category.request.CategoryUpdateRequest;
+import com.tiendinh.airbnb.exception.BusinessLogicException;
 import com.tiendinh.airbnb.mapper.CategoryMapper;
 import com.tiendinh.airbnb.model.constant.Constant;
 import com.tiendinh.airbnb.model.dto.CategoryDTO;
@@ -43,14 +44,14 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public CategoryDTO getCategoryById(Long id) {
-        var category = categoryRepository.findById(id).orElseThrow(() -> new RuntimeException("data not found"));
+        var category = categoryRepository.findById(id).orElseThrow(() -> BusinessLogicException.resourceNotFound("Data not found."));
         return categoryMapper.toDTO(category);
     }
 
     @Override
     public CategoryDTO createCategory(CategoryAddRequest request) {
         if (categoryRepository.existsByName(request.getName())) {
-            throw new RuntimeException("The category is already exists.");
+            throw BusinessLogicException.resourceDuplicated("The category is already exists.");
         }
         var category = new Category();
         category.setName(request.getName());
@@ -65,7 +66,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public CategoryDTO updateCategory(Long id, CategoryUpdateRequest request) {
         if (!categoryRepository.existsById(id)) {
-            throw new RuntimeException(("Data not found"));
+            throw BusinessLogicException.resourceNotFound("Data not found.");
         }
         var category = new Category();
         category.setId(id);
