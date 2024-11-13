@@ -24,7 +24,9 @@ CREATE TABLE IF NOT EXISTS public.locations (
     latitude NUMERIC(9, 6),
     longitude NUMERIC(9, 6),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    created_by VARCHAR(50),
+    updated_by VARCHAR(50)
 );
 
 -- 3. Property Types Table
@@ -32,7 +34,9 @@ CREATE TABLE IF NOT EXISTS public.property_types (
     id BIGSERIAL PRIMARY KEY,
     name VARCHAR(100) NOT NULL UNIQUE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    created_by VARCHAR(50),
+    updated_by VARCHAR(50)
 );
 
 CREATE TABLE IF NOT EXISTS public.categories (
@@ -40,7 +44,9 @@ CREATE TABLE IF NOT EXISTS public.categories (
     name VARCHAR(100) NOT NULL UNIQUE,
     description TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    created_by VARCHAR(50),
+    updated_by VARCHAR(50)
 );
 
 -- 4. Listings Table
@@ -60,6 +66,8 @@ CREATE TABLE IF NOT EXISTS public.listings (
     is_active BOOLEAN DEFAULT TRUE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    created_by VARCHAR(50),
+    updated_by VARCHAR(50),
     FOREIGN KEY (host_id) REFERENCES users(id) ON DELETE CASCADE,
     FOREIGN KEY (location_id) REFERENCES locations(id) ON DELETE SET NULL,
     FOREIGN KEY (property_type_id) REFERENCES property_types(id) ON DELETE SET NULL
@@ -70,6 +78,8 @@ CREATE TABLE IF NOT EXISTS public.listings_categories (
      category_id BIGINT,
      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
      updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+     created_by VARCHAR(50),
+     updated_by VARCHAR(50),
      PRIMARY KEY (listing_id, category_id),
      FOREIGN KEY (listing_id) REFERENCES listings(id) ON DELETE CASCADE,
      FOREIGN KEY (category_id) REFERENCES categories(id) ON DELETE CASCADE
@@ -85,6 +95,8 @@ CREATE TABLE IF NOT EXISTS public.photos (
     is_cover BOOLEAN DEFAULT FALSE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    created_by VARCHAR(50),
+    updated_by VARCHAR(50),
     FOREIGN KEY (listing_id) REFERENCES listings(id) ON DELETE CASCADE
 );
 
@@ -93,7 +105,9 @@ CREATE TABLE IF NOT EXISTS public.amenities (
      id BIGSERIAL PRIMARY KEY,
      name VARCHAR(100) NOT NULL,
      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+     created_by VARCHAR(50),
+     updated_by VARCHAR(50)
 );
 
 -- 7. Amenities Table
@@ -102,6 +116,8 @@ CREATE TABLE IF NOT EXISTS public.listing_amenities (
     amenity_id BIGINT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    created_by VARCHAR(50),
+    updated_by VARCHAR(50),
     PRIMARY KEY (listing_id, amenity_id),
     FOREIGN KEY (listing_id) REFERENCES listings(id) ON DELETE CASCADE,
     FOREIGN KEY (amenity_id) REFERENCES amenities(id) ON DELETE CASCADE
@@ -119,6 +135,8 @@ CREATE TABLE IF NOT EXISTS public.reservations (
     status VARCHAR(50) DEFAULT 'PENDING',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    created_by VARCHAR(50),
+    updated_by VARCHAR(50),
     FOREIGN KEY (listing_id) REFERENCES listings(id) ON DELETE CASCADE,
     FOREIGN KEY (guest_id) REFERENCES users(id) ON DELETE SET NULL
 );

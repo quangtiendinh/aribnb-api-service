@@ -5,4 +5,5 @@ public class Constant {
     public static final String PAGE_SIZE = "15";
     public static final String SORT_DEFAULT = "createdAt";
     public static final String SORT_DIRECTION_DEFAULT = "DESC";
+    public static final String SYSTEM_ADMIN = "SYSTEM_ADMIN";
 }
