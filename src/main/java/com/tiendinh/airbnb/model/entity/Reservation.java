@@ -1,7 +1,11 @@
 package com.tiendinh.airbnb.model.entity;
 
+import com.tiendinh.airbnb.model.enums.ReservationStatus;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -12,7 +16,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
+import java.util.Date;
 
 @Getter
 @Setter
@@ -23,19 +27,19 @@ public class Reservation extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "listing_id", nullable = false)
     private Listing listing;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "guest_id")
     private User guest;
 
     @Column(name = "check_in")
-    private LocalDate checkIn;
+    private Date checkIn;
 
     @Column(name = "check_out")
-    private LocalDate checkOut;
+    private Date checkOut;
 
     @Column(name = "guests_count")
     private int guestsCount;
@@ -43,6 +47,7 @@ public class Reservation extends BaseEntity {
     @Column(name = "total_price", precision = 10, scale = 2)
     private BigDecimal totalPrice;
 
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private ReservationStatus status;
 }
 
