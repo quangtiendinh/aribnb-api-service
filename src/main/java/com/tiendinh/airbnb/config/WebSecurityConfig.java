@@ -36,6 +36,7 @@ public class WebSecurityConfig {
             "/",
             "/api/v1/listings/**",
             "/api/v1/categories/**",
+            "/api/v1/reservations/**",
     };
 
     @Bean

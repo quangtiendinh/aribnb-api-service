@@ -5,4 +5,5 @@ public class ApiPath {
     public static final String LISTINGS = API_V1_VERSION + "/listings";
     public static final String CATEGORIES = API_V1_VERSION + "/categories";
     public static final String BY_ID = "/{id}";
+    public static final String RESERVATIONS = API_V1_VERSION + "/reservations";
 }

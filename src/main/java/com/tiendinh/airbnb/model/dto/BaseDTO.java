@@ -1,5 +1,6 @@
 package com.tiendinh.airbnb.model.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.persistence.MappedSuperclass;
@@ -20,6 +21,8 @@ import java.util.Date;
 @NoArgsConstructor
 @SuperBuilder
 public abstract class BaseDTO implements Serializable {
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private Date createdAt;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private Date updatedAt;
 }

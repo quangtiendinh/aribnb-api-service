@@ -11,6 +11,7 @@ import com.tiendinh.airbnb.model.dto.ListingDTO;
 import com.tiendinh.airbnb.model.dto.ListingViewDTO;
 import com.tiendinh.airbnb.model.dto.ListingViewDetailDTO;
 import com.tiendinh.airbnb.model.entity.Listing;
+import com.tiendinh.airbnb.model.entity.ListingCategory;
 import com.tiendinh.airbnb.model.entity.Location;
 import com.tiendinh.airbnb.model.entity.PropertyType;
 import com.tiendinh.airbnb.model.entity.User;
@@ -30,8 +31,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import java.util.Date;
-import java.util.HashSet;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -91,7 +92,17 @@ public class ListingServiceImpl implements ListingService {
             listing.setCreatedAt(new Date());
             listing.setUpdatedBy(Constant.SYSTEM_ADMIN);
             listing.setCreatedBy(Constant.SYSTEM_ADMIN);
-            listing.setCategories(new HashSet<>(categories));
+            if (!CollectionUtils.isEmpty(categories)) {
+                var listingCategories = categories.stream()
+                        .map(category -> {
+                            ListingCategory listingCategory = new ListingCategory();
+                            listingCategory.setListing(listing);
+                            listingCategory.setCategory(category);
+                            return listingCategory;
+                        })
+                        .collect(Collectors.toSet());
+                listing.setListingCategories(listingCategories);
+            }
             return listingMapper.toDTO(listingRepository.save(listing));
         } else {
             throw new IllegalArgumentException("Invalid input data for creating listing");
@@ -126,9 +137,17 @@ public class ListingServiceImpl implements ListingService {
             listing.setCreatedAt(new Date());
             listing.setUpdatedBy(Constant.SYSTEM_ADMIN);
             listing.setCreatedBy(Constant.SYSTEM_ADMIN);
-            listing.setCategories(new HashSet<>(categories));
-            listing.setCategories(new HashSet<>(categories));
-
+            if (!CollectionUtils.isEmpty(categories)) {
+                var listingCategories = categories.stream()
+                        .map(category -> {
+                            ListingCategory listingCategory = new ListingCategory();
+                            listingCategory.setListing(listing);
+                            listingCategory.setCategory(category);
+                            return listingCategory;
+                        })
+                        .collect(Collectors.toSet());
+                listing.setListingCategories(listingCategories);
+            }
             return listingMapper.toDTO(listingRepository.save(listing));
         } else {
             throw new IllegalArgumentException("Listing not found");
