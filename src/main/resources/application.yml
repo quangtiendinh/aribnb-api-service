@@ -1,3 +1,8 @@
+app:
+  jwt:
+    secret: b0fc3d1c-c4e1-4f2d-88e1-2a21f9d6cd42
+    expiration: P100D
+    version: 1
 spring:
   datasource:
     url: jdbc:postgresql://localhost:5435/airbnb_db_dev

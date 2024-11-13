@@ -1,18 +1,23 @@
 package com.tiendinh.airbnb.config;
 
+import com.tiendinh.airbnb.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -28,31 +33,47 @@ import java.util.List;
         jsr250Enabled = true)
 public class WebSecurityConfig {
 
-    public static final String[] WHITELIST_ENDPOINTS = {
+    private final UserService userService;
+    private final JwtAuthTokenFilter jwtAuthTokenFilter;
+
+    private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
+
+    private static final String[] WHITELIST_ENDPOINT = {
             "/swagger-ui/**",
             "/v3/api-docs/**",
             "/actuator/health",
+            "/api/v1/auth/login",
+            "/api/v1/auth/register",
             "favicon.ico",
             "/",
-            "/api/v1/listings/**",
-            "/api/v1/categories/**",
-            "/api/v1/reservations/**",
     };
 
     @Bean
     public SecurityFilterChain configure(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(authorizeRequests -> authorizeRequests
-                .requestMatchers(WHITELIST_ENDPOINTS)
-                .permitAll()).csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(authorizeRequests -> authorizeRequests
-                        .anyRequest()
-                        .authenticated())
-                .csrf(AbstractHttpConfigurer::disable)
+                        .requestMatchers(WHITELIST_ENDPOINT).permitAll())
+                .authorizeHttpRequests(authorizeRequests -> authorizeRequests.anyRequest().authenticated())
+                .csrf(AbstractHttpConfigurer::disable) // NOSONAR
+                .sessionManagement(manager -> manager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .securityContext(sec -> sec.requireExplicitSave(true));
 
         http.cors(Customizer.withDefaults());
+        http.exceptionHandling(exception -> exception.authenticationEntryPoint(jwtAuthenticationEntryPoint));
+        http.addFilterBefore(jwtAuthTokenFilter, UsernamePasswordAuthenticationFilter.class);
+        http.authenticationProvider(authenticationProvider());
+
         return http.build();
     }
+
+    @Bean
+    public AuthenticationProvider authenticationProvider() {
+        var provider = new DaoAuthenticationProvider();
+        provider.setPasswordEncoder(passwordEncoder());
+        provider.setUserDetailsService(userService);
+
+        return provider;
+    }
+
 
     @Bean
     public AuthenticationManager authenticationManager(
