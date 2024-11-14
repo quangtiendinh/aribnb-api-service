@@ -9,4 +9,6 @@ public class ApiPath {
     public static final String AUTH = API_V1_VERSION + "/auth";
     public static final String LOGIN = "/login";
     public static final String REGISTER = "/register";
+    public static final String PROPERTY_TYPES = API_V1_VERSION + "/property-types";
+    public static final String LOCATIONS = API_V1_VERSION + "/locations";
 }

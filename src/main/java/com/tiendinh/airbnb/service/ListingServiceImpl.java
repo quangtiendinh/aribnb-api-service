@@ -16,7 +16,6 @@ import com.tiendinh.airbnb.model.entity.ListingCategory;
 import com.tiendinh.airbnb.model.entity.Location;
 import com.tiendinh.airbnb.model.entity.PropertyType;
 import com.tiendinh.airbnb.model.entity.User;
-import com.tiendinh.airbnb.repository.AmenityRepository;
 import com.tiendinh.airbnb.repository.CategoryRepository;
 import com.tiendinh.airbnb.repository.ListingRepository;
 import com.tiendinh.airbnb.repository.ListingViewDetailRepository;
@@ -46,7 +45,6 @@ public class ListingServiceImpl implements ListingService {
     private final PropertyTypeRepository propertyTypeRepository;
     private final LocationRepository locationRepository;
     private final CategoryRepository categoryRepository;
-    private final AmenityRepository amenityRepository;
     private final ListingViewMapper listingViewMapper;
     private final ListingMapper listingMapper;
     private final ListingViewDetailMapper viewDetailMapper;

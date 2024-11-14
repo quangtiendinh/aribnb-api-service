@@ -3,13 +3,15 @@ CREATE TABLE IF NOT EXISTS public.users (
     id BIGSERIAL PRIMARY KEY,
     username VARCHAR(50) NOT NULL,
     email VARCHAR(100) UNIQUE NOT NULL,
-    password_hash VARCHAR(100) NOT NULL,
+    password VARCHAR(100) NOT NULL,
     phone_number VARCHAR(20),
     profile_picture VARCHAR(255),
     bio TEXT,
     is_host BOOLEAN DEFAULT FALSE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    created_by VARCHAR(50),
+    updated_by VARCHAR(50)
 );
 
 
@@ -98,29 +100,6 @@ CREATE TABLE IF NOT EXISTS public.photos (
     created_by VARCHAR(50),
     updated_by VARCHAR(50),
     FOREIGN KEY (listing_id) REFERENCES listings(id) ON DELETE CASCADE
-);
-
--- 6. Amenities Table
-CREATE TABLE IF NOT EXISTS public.amenities (
-     id BIGSERIAL PRIMARY KEY,
-     name VARCHAR(100) NOT NULL,
-     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-     created_by VARCHAR(50),
-     updated_by VARCHAR(50)
-);
-
--- 7. Amenities Table
-CREATE TABLE IF NOT EXISTS public.listing_amenities (
-    listing_id BIGINT,
-    amenity_id BIGINT,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    created_by VARCHAR(50),
-    updated_by VARCHAR(50),
-    PRIMARY KEY (listing_id, amenity_id),
-    FOREIGN KEY (listing_id) REFERENCES listings(id) ON DELETE CASCADE,
-    FOREIGN KEY (amenity_id) REFERENCES amenities(id) ON DELETE CASCADE
 );
 
 -- 8. Reservations Table

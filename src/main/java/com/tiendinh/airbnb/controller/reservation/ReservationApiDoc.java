@@ -65,8 +65,4 @@ public interface ReservationApiDoc {
     default ResponseEntity<Void> deleteReservation(@PathVariable Long id) {
         return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
     }
-
-
-
-
 }
