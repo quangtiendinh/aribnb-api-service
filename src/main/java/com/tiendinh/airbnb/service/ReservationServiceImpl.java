@@ -115,7 +115,7 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Override
     public ReservationDTO cancelReservation(Long id) {
-        return updateReservationStatus(id, ReservationStatus.CANCELED);
+        return updateReservationStatus(id, ReservationStatus.CANCELLED);
     }
 
     @Override
@@ -134,7 +134,7 @@ public class ReservationServiceImpl implements ReservationService {
             throw ReservationException.reservationConfirmed();
         }
 
-        if (reservation.getStatus() == ReservationStatus.CANCELED) {
+        if (reservation.getStatus() == ReservationStatus.CANCELLED) {
             throw ReservationException.reservationCanceled();
         }
         reservation.setStatus(status);

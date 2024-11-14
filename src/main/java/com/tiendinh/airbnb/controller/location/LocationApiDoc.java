@@ -6,8 +6,11 @@ import com.tiendinh.airbnb.core.response.DataListResponse;
 import com.tiendinh.airbnb.model.constant.ApiPath;
 import com.tiendinh.airbnb.model.dto.LocationDTO;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
@@ -27,11 +30,23 @@ import static com.tiendinh.airbnb.model.constant.Constant.SORT_DEFAULT;
 import static com.tiendinh.airbnb.model.constant.Constant.SORT_DIRECTION_DEFAULT;
 
 @RequestMapping(ApiPath.LOCATIONS)
+@Tag(name = "Locations", description = "The locations API")
 public interface LocationApiDoc {
 
-    @Operation(summary = "Listings item", operationId = "getListings", description = "Return the list of listings item")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "200")})
+    @Operation(
+            summary = "Get List of Locations",
+            description = "Retrieve a list of locations with optional filtering, pagination, and sorting.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Successfully retrieved the list of locations",
+                            content = @Content(
+                                    schema = @Schema(implementation = DataListResponse.class))),
+                    @ApiResponse(
+                            responseCode = "400",
+                            description = "Invalid request parameters")
+            }
+    )
     @GetMapping
     default ResponseEntity<DataListResponse<LocationDTO>> getLocations(
                                                                       @RequestParam(required = false) String country,
@@ -43,20 +58,78 @@ public interface LocationApiDoc {
         return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
     }
 
+    @Operation(
+            summary = "Get Location by ID",
+            description = "Retrieve a location by its ID.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Successfully retrieved the location",
+                            content = @Content(
+                                    schema = @Schema(implementation = LocationDTO.class))),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "Location not found")
+            }
+    )
     @GetMapping(ApiPath.BY_ID)
     default ResponseEntity<LocationDTO> getLocationById(@PathVariable Long id) {
         return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
     }
 
+    @Operation(
+            summary = "Create a New Location",
+            description = "Create a new location by providing the necessary details.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "201",
+                            description = "Successfully created the location",
+                            content = @Content(
+                                    schema = @Schema(implementation = LocationDTO.class))),
+                    @ApiResponse(
+                            responseCode = "400",
+                            description = "Invalid location data")
+            }
+    )
     @PostMapping
     default ResponseEntity<LocationDTO> createLocation(@Valid @RequestBody LocationAddRequest request) {
         return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
     }
+
+    @Operation(
+            summary = "Update Location",
+            description = "Update an existing location by its ID.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Successfully updated the location",
+                            content = @Content(
+                                    schema = @Schema(implementation = LocationDTO.class))),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "Location not found"),
+                    @ApiResponse(
+                            responseCode = "400",
+                            description = "Invalid location data")
+            }
+    )
     @PutMapping(ApiPath.BY_ID)
     default ResponseEntity<LocationDTO> updateLocation(@PathVariable Long id, @Valid @RequestBody LocationUpdateRequest request) {
         return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
     }
 
+    @Operation(
+            summary = "Delete Location",
+            description = "Delete an existing location by its ID.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Successfully deleted the location"),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "Location not found")
+            }
+    )
     @DeleteMapping(ApiPath.BY_ID)
     default ResponseEntity<Void> deleteLocation(@PathVariable Long id) {
         return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);

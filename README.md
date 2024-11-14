@@ -74,18 +74,18 @@ Base URL: http://localhost:8080
 - Request Body
 ```json
     {
-    "username": "teedinh",
-    "email": "teedinh.com",
-    "password": "12345",
-    "phoneNumber": "+84385188858"
+      "username": "admin",
+      "email": "admin@gmail.com",
+      "password": "12345",
+      "phoneNumber": "+84385188858"
     }
 ```
 - Response
 ```json
     {
       "id": 1,
-      "username": "teedinh",
-      "email": "teedinh.com",
+      "username": "admin",
+      "email": "admin@gmail.com",
       "phoneNumber": "+84385188858"
     }
 ```
@@ -97,33 +97,34 @@ Include the token in request headers:
 
 ## API Endpoints
 ### Listing Management
-- Create a Listing
-  - Endpoint: POST /api/v1/listings
-  - Request Body
-  ```json
-    {
-      "hostId": 1,
-      "title": "cccCozy Apartment in the Heart of NYC",
-      "description": "A charming one-bedroom apartment with a beautiful view of the city.",
-      "propertyTypeId": 1,
-      "guests": 1,
-      "bedrooms": 1,
-      "bathrooms": 1,
-      "beds": 1,
-      "pricePerNight": 150.00,
-      "cleaningFee": 20.00,
-      "locationId": 1,
-      "isActive": true,
-      "categoryIds": [1]
-    }
-  ```
 - Get All Listings
-  - Endpoint: GET /api/listings
+  - Endpoint: GET /api/v1/listings
   - Query Params: page, size, sort, city, name
   ```shell
     GET /api/listings?page=0&size=10 
   ```
 - Update a Listing
   - Endpoint: PUT /api/v1/listings/{id}
-Delete a Listing
+- Delete a Listing
   - Endpoint: DELETE /api/v1/listings/{id}
+### Reservation Management
+- Create a Reservation
+  -  Endpoint: POST /api/v1/reservations
+  -  Request Body:
+  ```json
+    {
+      "listingId": 1,
+      "guestId": 2,
+      "checkIn": "2024-12-01",
+      "checkOut": "2024-12-05",
+      "guests": 2
+    }
+
+   
+   ```  
+- Confirm a Reservation
+  - Endpoint: PUT /api/v1/reservations/{id}/confirm 
+- Cancel a Reservation
+  - Endpoint: PUT /api/v1/reservations/{id}/cancel
+
+Postman collecions: [link](./docs/aribnb-service-test.postman_collection.json)

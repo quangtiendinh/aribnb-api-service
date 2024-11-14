@@ -1,6 +1,5 @@
 package com.tiendinh.airbnb.model.entity;
 
-import jakarta.persistence.Embeddable;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
@@ -9,8 +8,6 @@ import jakarta.persistence.MapsId;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.io.Serializable;
 
 @Getter
 @Setter
@@ -29,12 +26,4 @@ public class ListingCategory extends BaseEntity {
     @MapsId("categoryId")
     @JoinColumn(name = "category_id")
     private Category category;
-
-    @Embeddable
-    @Getter
-    @Setter
-    public static class ListingCategoryId implements Serializable {
-        private Long listingId;
-        private Long categoryId;
-    }
 }
